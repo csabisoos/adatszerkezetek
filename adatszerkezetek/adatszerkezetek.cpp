@@ -1,11 +1,13 @@
 #include <vector>
 #include <iostream>
+#include <map>
+#include <unordered_map>
 using namespace std;
 
 int main()
 {
-    int statikus_tomb[5]; // C#-ban ugyanez int[] statikus_tomb = new int[5];
-    // nem newzunk meg semmit, de ettol meg van new, csak mashogy hasznaljak
+	int statikus_tomb[5]; // C#-ban ugyanez int[] statikus_tomb = new int[5];
+	// nem newzunk meg semmit, de ettol meg van new, csak mashogy hasznaljak
 
 	cerr << "A tomb (array) elemei: "; // Console.Error.Writeline
 
@@ -79,25 +81,88 @@ int main()
 		cout << elem << " ";
 	}
 	cout << endl;
-	for (auto& elem: ezmarlista)
+	for (auto& elem : ezmarlista)
 	{
 		cout << elem << " ";
 	}
 	cout << endl;
 
 	//matrixok, tobbdimenzios tombok
-	// ez egy 2D-s 3x3-as csupaegyes matrix:
-	/** /
+	// ez egy 2D-s 3x3-as csupaegyes matrix: //  sor*oszlop
 	vector<vector<int>> matrix;
+	vector<int>* sormutato;
 
-	vector<int> sor;
 	for (size_t i = 0; i < 3; i++)
 	{
-		sor =
-		for (size_t j = 0; j < 5; j++)
-		{	
-			matrix[i][j] = 1;
+//		vector<int> sor(5, i); // ez mukodik de ronda
+		sormutato = new vector<int>(5, i); // nincs most neve neki, csak a helyet tudjuk
+		matrix.push_back(*sormutato);
+	}
+	cout << "A matrix jelenleg:" << endl;
+	for (size_t i = 0; i < 3; i++)// soronkent
+	{
+		for (size_t j = 0; j < 5; j++) // sorokon belul oszloponkent
+		{
+			cout << matrix[i][j] << " ";
+		}//amikor vegere er a sornak
+		cout << endl;
+	}
+	cout << endl;
+
+	int x = 10;
+
+	cout << "x:" << x << endl; // 10
+	cout << "&x:"<< &x << endl; // ez valami meoriacimet ad
+//	cout << "*x:" << *x << endl; // hibat ad mert nem memoriacim
+	cout << "*&x:" << *&x << endl; // 10
+//	cout << "&*x:" << &*x << endl; // hibat ad mert *x-vel kezdi a munkat, amivel nem lehet
+	cout << "*&*&*&*&*&*&*&*&*&*&*&x:" << *&*&*&*&*&*&*&*&*&*&*&x << endl; // 10
+//	cout << "&&x:" << && x << endl; // nem mukodik, de amugy nem teljesen ertelmetlen gondolat, lasd:
+	
+	int* m1 = &x;
+	int** m2 = &m1;
+	int*** m3 = &m2;
+	//m3 -> m2 -> m1 -> x
+	cout << "menjunk vegig:" << ***m3 << endl;
+
+	//szotarak -- ketfele van
+	//map es undordered_map
+
+	map<string, int> szotar;
+	szotar["bla"] = 5;
+	szotar["asdf"] = 7;
+	szotar["zoli"] = -3;
+
+	cout << "bla " << szotar["bla"] << endl;
+	cout << "asdf " << szotar["asdf"] << endl;
+	cout << "zoli " << szotar["zoli"] << endl;
+
+	string szoveg = "asdfghjklqwertzuioyxcvbnmaaaaaaaaaa";
+	// GROUP BY feladat
+	//csinaljunk statisztikat arrol, hogy melyik betu milyen gyakorisaggal szerepel
+
+	map<char, int> statisztika;
+
+	// "a" -> 3
+	// "s" -> 2
+	// "f" -> 2
+	// "g" -> 1
+
+	for (auto& karakter : szoveg)
+	{
+		// statisztika.find(szoveg[i]) visszaadja a keresett elem HELYET, vagy ha nem talalta meg akkor a statisztika veget adja meg
+		if (statisztika.find(karakter) != statisztika.end())// ez azt jelenti, hogy a kereses soran nem ert vegere
+		{
+			statisztika[karakter]++;
+		}
+		else
+		{
+			statisztika[karakter] = 1;
 		}
 	}
-	/**/
+	for (auto& elem : statisztika)
+	{
+		cout << elem.first << "->" << elem.second << endl;
+	}
 }
+
